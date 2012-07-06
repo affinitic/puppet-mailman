@@ -11,14 +11,15 @@ class mailman::base {
     require => Package['mailman'],
   }
 
-  file{'/usr/local/mailman/Mailman/mm_cfg.py':
+  file{'/etc/mailman/mm_cfg.py':
     source => [ "puppet:///modules/site-mailman/config/${fqdn}/mm_cfg.py",
                 "puppet:///modules/site-mailman/config/mm_cfg.py",
                 "puppet:///modules/mailman/config/${operatingsystem}/mm_cfg.py",
-                "puppet:///modules/mailman/config/mm_cfg.py" ],
+                "puppet:///modules/mailman/config/mm_cfg.py",
+                "puppet:///modules/affinitic/mailman/mm_cfg.py"],
     require => Package['mailman'],
     notify => Service['mailman'],
-    owner => root, group => mailman, mode => 0644;
+    owner => root, group => list, mode => 0644;
   }
 
   if $mailman_admin == '' { fail("you have to set \$mailman_admin on $fqdn") }
@@ -33,8 +34,8 @@ class mailman::base {
   }
 
   exec{'set_mailman_adminpw':
-    command => "/usr/local/mailman/bin/mmsitepass ${mailman_password}",
-    creates => "/usr/local/mailman/data/adm.pw",
+    command => "/var/lib/mailman/bin/mmsitepass ${mailman_password}",
+    creates => "/var/lib/mailman/data/adm.pw",
     require => Package['mailman'],
   }
 }
