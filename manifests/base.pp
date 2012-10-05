@@ -6,7 +6,8 @@ class mailman::base {
   service{'mailman':
     ensure => running,
     enable => true,
-    hasstatus => true,
+    hasstatus => false,
+    pattern   => 'qrunner',
     hasrestart => true,
     require => Package['mailman'],
   }
