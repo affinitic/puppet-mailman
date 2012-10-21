@@ -47,8 +47,8 @@ define mailman::list(
     mailserver => $real_mailserver,
     webserver => $real_webserver,
     require => Package['mailman'],
+    notify => Exec['newaliases']
   }
-
 
   if $description != 'absent' {
     Maillist[$name]{
