@@ -1,4 +1,9 @@
-class mailman::base {
+class mailman::base (
+  $mailman_admin = hiera('mailman::admin'),
+  $mailman_password = hiera('mailman::password'),
+  $mailman_mailserver = hiera('mailman::mailserver'),
+  $mailman_webserver = hiera('mailman::webserver')
+){
   package{'mailman':
     ensure => installed,
   }
@@ -27,11 +32,13 @@ class mailman::base {
   if $mailman_password == '' { fail("you have to set \$mailman_password on $fqdn") }
 
   mailman::list {'mailman':
-    ensure => 'present',
-    admin => $mailman_admin,
-    password => $mailman_password,
-    require => Package['mailman'],
-    notify => Service['mailman']
+    ensure     => 'present',
+    admin      => $mailman_admin,
+    password   => $mailman_password,
+    mailserver => $mailman_mailserver,
+    webserver  => $mailman_webserver,
+    require    => Package['mailman'],
+    notify     => Service['mailman']
   }
 
   exec{'set_mailman_adminpw':
