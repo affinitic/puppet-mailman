@@ -25,7 +25,7 @@ class mailman::base (
                 "puppet:///modules/affinitic/mailman/mm_cfg.py"],
     require => Package['mailman'],
     notify => Service['mailman'],
-    owner => root, group => list, mode => 0644;
+    owner => root, group => list, mode => '0644';
   }
 
   if $mailman_admin == '' { fail("you have to set \$mailman_admin on $fqdn") }
